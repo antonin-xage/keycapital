@@ -115,7 +115,7 @@ public class JpaUserProvider implements UserProvider, UserCredentialStore, JpaUs
         UserEntity entity = new UserEntity();
         entity.setId(id);
         entity.setCreatedTimestamp(System.currentTimeMillis());
-        entity.setUsername(username.toLowerCase());
+        entity.setUsername(username);
         entity.setRealmId(realm.getId());
         em.persist(entity);
         em.flush();
@@ -141,7 +141,7 @@ public class JpaUserProvider implements UserProvider, UserCredentialStore, JpaUs
 
     @Override
     public UserModel addUser(RealmModel realm, String username) {
-        return addUser(realm, KeycloakModelUtils.generateId(), username.toLowerCase(), true, true);
+        return addUser(realm, KeycloakModelUtils.generateId(), username, true, true);
     }
 
     @Override
@@ -519,7 +519,7 @@ public class JpaUserProvider implements UserProvider, UserCredentialStore, JpaUs
     @Override
     public UserModel getUserByUsername(RealmModel realm, String username) {
         TypedQuery<UserEntity> query = em.createNamedQuery("getRealmUserByUsername", UserEntity.class);
-        query.setParameter("username", username.toLowerCase());
+        query.setParameter("username", username);
         query.setParameter("realmId", realm.getId());
         List<UserEntity> results = query.getResultList();
         if (results.isEmpty()) return null;
@@ -529,7 +529,7 @@ public class JpaUserProvider implements UserProvider, UserCredentialStore, JpaUs
     @Override
     public UserModel getUserByEmail(RealmModel realm, String email) {
         TypedQuery<UserEntity> query = em.createNamedQuery("getRealmUserByEmail", UserEntity.class);
-        query.setParameter("email", email.toLowerCase());
+        query.setParameter("email", email);
         query.setParameter("realmId", realm.getId());
         List<UserEntity> results = query.getResultList();
 
@@ -1054,9 +1054,9 @@ public class JpaUserProvider implements UserProvider, UserCredentialStore, JpaUs
                 case USERNAME:
                 case EMAIL:
                     if (Boolean.parseBoolean(attributes.get(UserModel.EXACT))) {
-                        predicates.add(builder.equal(root.get(key), value.toLowerCase()));
+                        predicates.add(builder.equal(root.get(key), value));
                     } else {
-                        predicates.add(builder.like(root.get(key), "%" + value.toLowerCase() + "%"));
+                        predicates.add(builder.like(root.get(key), "%" + value + "%"));
                     }
                     break;
                 case EMAIL_VERIFIED:
