@@ -263,7 +263,7 @@ public class UserCacheSession implements UserCache, OnCreateComponent, OnUpdateC
         if (rawUsername == null) {
             return null;
         }
-        String username = rawUsername.toLowerCase();
+        String username = rawUsername;
         logger.tracev("getUserByUsername: {0}", username);
         if (realmInvalidations.contains(realm.getId())) {
             logger.tracev("realmInvalidations");
@@ -432,7 +432,7 @@ public class UserCacheSession implements UserCache, OnCreateComponent, OnUpdateC
     @Override
     public UserModel getUserByEmail(RealmModel realm, String rawEmail) {
         if (rawEmail == null) return null;
-        String email = rawEmail.toLowerCase();
+        String email = rawEmail;
         if (realmInvalidations.contains(realm.getId())) {
             return getDelegate().getUserByEmail(realm, email);
         }
@@ -561,7 +561,6 @@ public class UserCacheSession implements UserCache, OnCreateComponent, OnUpdateC
     public UserModel findServiceAccount(ClientModel client) {
         String username = ServiceAccountConstants.SERVICE_ACCOUNT_USER_PREFIX + client.getClientId();
         logger.tracev("getServiceAccount: {0}", username);
-        username = username.toLowerCase();
         RealmModel realm = client.getRealm();
         if (realmInvalidations.contains(realm.getId())) {
             logger.tracev("realmInvalidations");
